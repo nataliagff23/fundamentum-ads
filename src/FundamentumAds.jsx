@@ -117,6 +117,14 @@ const SHARED_STYLES = `
   .fu { animation: fadeUp 0.4s ease both; }
   .lbl { font-size: 11px; color: #888270; text-transform: uppercase; letter-spacing: 0.1em; font-family: 'DM Sans', sans-serif; font-weight: 700; display: block; margin-bottom: 6px; }
   .step-num { width: 22px; height: 22px; border-radius: 50%; background: #C9A84C20; border: 1px solid #C9A84C50; color: #C9A84C; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; font-family: 'DM Sans', sans-serif; flex-shrink: 0; }
+  @media (max-width: 600px) {
+    .inp { font-size: 16px; padding: 14px 14px; }
+    .btn-gold { width: 100%; padding: 15px 20px; font-size: 15px; }
+    .card { padding: 16px 14px; border-radius: 12px; }
+    .vote-btn { padding: 10px 12px; }
+    .lbl { font-size: 12px; }
+    .step-num { display: none; }
+  }
 `;
 
 // ─── MAIN ───
@@ -179,20 +187,20 @@ export default function FundamentumAds() {
       <style>{SHARED_STYLES}</style>
 
       {/* Header */}
-      <div style={{ background: "#1A1810", borderBottom: "1px solid #3a3520", padding: "0 28px" }}>
-        <div style={{ maxWidth: 780, margin: "0 auto", display: "flex", justifyContent: "space-between", alignItems: "center", height: 64 }}>
-          <div style={{ display: "flex", alignItems: "baseline", gap: 10 }}>
-            <span style={{ fontFamily: "'Playfair Display', serif", fontSize: 22, fontWeight: 900, color: "#C9A84C" }}>Fundamentum</span>
-            <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: "#888270", letterSpacing: "0.18em", textTransform: "uppercase" }}>Ads · Preguntas</span>
+      <div style={{ background: "#1A1810", borderBottom: "1px solid #3a3520", padding: "0 16px" }}>
+        <div style={{ maxWidth: 780, margin: "0 auto", display: "flex", justifyContent: "space-between", alignItems: "center", height: 56 }}>
+          <div style={{ display: "flex", alignItems: "baseline", gap: 8, flexWrap: "wrap" }}>
+            <span style={{ fontFamily: "'Playfair Display', serif", fontSize: 20, fontWeight: 900, color: "#C9A84C" }}>Fundamentum</span>
+            <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: "#888270", letterSpacing: "0.18em", textTransform: "uppercase" }}>Ads · Preguntas</span>
           </div>
         </div>
       </div>
 
-      <div style={{ maxWidth: 780, margin: "0 auto", padding: "36px 24px" }}>
+      <div style={{ maxWidth: 780, margin: "0 auto", padding: "24px 14px" }}>
 
         {/* FORM */}
-        <div className="fu" style={{ background: "#231F10", border: "1px solid #3a3520", borderRadius: 20, padding: "32px", marginBottom: 36 }}>
-          <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 22, color: "#FFFFFF", marginBottom: 6 }}>
+        <div className="fu" style={{ background: "#231F10", border: "1px solid #3a3520", borderRadius: 16, padding: "24px 18px", marginBottom: 28 }}>
+          <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 20, color: "#FFFFFF", marginBottom: 6 }}>
             Cuéntame sobre ti y tu negocio
           </h2>
           <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, color: "#888270", lineHeight: 1.6, marginBottom: 28 }}>
@@ -276,7 +284,7 @@ export default function FundamentumAds() {
           </div>
 
           {/* Submit */}
-          <div style={{ marginTop: 28, paddingTop: 24, borderTop: "1px solid #3a3520", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <div style={{ marginTop: 28, paddingTop: 24, borderTop: "1px solid #3a3520", display: "flex", flexWrap: "wrap", justifyContent: "space-between", alignItems: "center", gap: 12 }}>
             {submitted ? (
               <span className="fu" style={{ fontSize: 14, color: "#10b981", fontFamily: "'DM Sans', sans-serif" }}>
                 ¡Recibido! Lo usaré para preparar las lecciones.
@@ -294,10 +302,10 @@ export default function FundamentumAds() {
 
         {/* Questions list */}
         <div>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16, borderBottom: "1px solid #3a3520", paddingBottom: 12 }}>
-            <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: 18, color: "#FFFFFF" }}>Preguntas del grupo</h3>
-            <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: "#888270" }}>
-              {entries.length} registradas · vota las que también te interesan
+          <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "space-between", alignItems: "center", marginBottom: 16, borderBottom: "1px solid #3a3520", paddingBottom: 12, gap: 4 }}>
+            <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: 17, color: "#FFFFFF" }}>Preguntas del grupo</h3>
+            <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: "#888270" }}>
+              {entries.length} registradas · vota las que te interesan
             </span>
           </div>
 

@@ -252,9 +252,6 @@ export default function FundamentumAds() {
               <div className="step-num" style={{ marginTop: 2 }}>4</div>
               <div style={{ flex: 1 }}>
                 <label className="lbl">Tu pregunta para el curso</label>
-                <p style={{ fontSize: 12, color: "#888270", fontFamily: "'DM Sans', sans-serif", marginBottom: 8, lineHeight: 1.5 }}>
-                  ¿Qué problema específico quieres resolver o qué quieres aprender con Google / Meta Ads?
-                </p>
                 <textarea className="inp" rows={3} style={{ resize: "none" }}
                   placeholder="Ej. ¿Cómo sé si mi presupuesto es suficiente para hacer crecer mis campañas o si debo optimizar antes de escalar?"
                   value={pregunta} onChange={(e) => setPregunta(e.target.value)} />

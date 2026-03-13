@@ -118,7 +118,8 @@ const SHARED_STYLES = `
   .lbl { font-size: 11px; color: #888270; text-transform: uppercase; letter-spacing: 0.1em; font-family: 'DM Sans', sans-serif; font-weight: 700; display: block; margin-bottom: 6px; }
   .step-num { width: 22px; height: 22px; border-radius: 50%; background: #C9A84C20; border: 1px solid #C9A84C50; color: #C9A84C; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; font-family: 'DM Sans', sans-serif; flex-shrink: 0; }
   @media (max-width: 600px) {
-    .inp { font-size: 16px; padding: 14px 14px; }
+    .inp { font-size: 14px; padding: 14px 14px; }
+    .inp::placeholder { font-size: 13px; }
     .btn-gold { width: 100%; padding: 15px 20px; font-size: 15px; }
     .card { padding: 16px 14px; border-radius: 12px; }
     .vote-btn { padding: 10px 12px; }
@@ -137,7 +138,7 @@ export default function FundamentumAds() {
   const [nicho, setNicho] = useState("");
   const [nichoCustom, setNichoCustom] = useState("");
   const [tipoNegocio, setTipoNegocio] = useState("");
-  const [pregunta, setPregunta] = useState("");
+  const [preguntas, setPreguntas] = useState([""]);
 
   useEffect(() => {
     fetchEntries()
@@ -147,27 +148,48 @@ export default function FundamentumAds() {
   }, []);
 
   useEffect(() => {
-    if (pregunta.trim().length > 6) {
-      const words = pregunta.toLowerCase().split(" ").filter((w) => w.length > 3);
+    const current = preguntas[0] || "";
+    if (current.trim().length > 6) {
+      const words = current.toLowerCase().split(" ").filter((w) => w.length > 3);
       setSimilar(entries.filter((e) => words.some((w) => e.pregunta.toLowerCase().includes(w))).slice(0, 3));
     } else setSimilar([]);
-  }, [pregunta, entries]);
+  }, [preguntas, entries]);
 
   const nichoFinal = nicho === "Otro" ? nichoCustom.trim() : nicho;
-  const canSubmit = nombre.trim() && nichoFinal && tipoNegocio.trim() && pregunta.trim();
+  const preguntasValidas = preguntas.filter((p) => p.trim());
+  const canSubmit = nombre.trim() && nichoFinal && tipoNegocio.trim() && preguntasValidas.length > 0;
+
+  function updatePregunta(index, value) {
+    const updated = [...preguntas];
+    updated[index] = value;
+    setPreguntas(updated);
+  }
+
+  function addPregunta() {
+    setPreguntas([...preguntas, ""]);
+  }
+
+  function removePregunta(index) {
+    if (preguntas.length <= 1) return;
+    setPreguntas(preguntas.filter((_, i) => i !== index));
+  }
 
   async function handleSubmit() {
     if (!canSubmit) return;
     try {
-      const newEntry = await createEntry({
-        nombre: nombre.trim(),
-        nicho: nichoFinal,
-        tipoNegocio: tipoNegocio.trim(),
-        pregunta: pregunta.trim(),
-      });
-      setEntries([newEntry, ...entries]);
+      const newEntries = [];
+      for (const p of preguntasValidas) {
+        const newEntry = await createEntry({
+          nombre: nombre.trim(),
+          nicho: nichoFinal,
+          tipoNegocio: tipoNegocio.trim(),
+          pregunta: p.trim(),
+        });
+        newEntries.push(newEntry);
+      }
+      setEntries([...newEntries, ...entries]);
     } catch {}
-    setNombre(""); setNicho(""); setNichoCustom(""); setTipoNegocio(""); setPregunta(""); setSimilar([]);
+    setNombre(""); setNicho(""); setNichoCustom(""); setTipoNegocio(""); setPreguntas([""]); setSimilar([]);
     setSubmitted(true);
     setTimeout(() => setSubmitted(false), 4000);
   }
@@ -247,14 +269,28 @@ export default function FundamentumAds() {
               </div>
             </div>
 
-            {/* 4. Pregunta */}
+            {/* 4. Preguntas */}
             <div style={{ display: "flex", gap: 14, alignItems: "flex-start" }}>
               <div className="step-num" style={{ marginTop: 2 }}>4</div>
               <div style={{ flex: 1 }}>
-                <label className="lbl">Tu pregunta para el curso</label>
-                <textarea className="inp" rows={3} style={{ resize: "none" }}
-                  placeholder="Ej. ¿Cómo sé si mi presupuesto es suficiente para hacer crecer mis campañas o si debo optimizar antes de escalar?"
-                  value={pregunta} onChange={(e) => setPregunta(e.target.value)} />
+                <label className="lbl">Tu(s) pregunta(s) para el curso</label>
+                {preguntas.map((p, i) => (
+                  <div key={i} style={{ display: "flex", gap: 8, alignItems: "flex-start", marginBottom: 8 }}>
+                    <textarea className="inp" rows={3} style={{ resize: "none", flex: 1 }}
+                      placeholder="Ej. ¿Cómo sé si mi presupuesto es suficiente para hacer crecer mis campañas o si debo optimizar antes de escalar?"
+                      value={p} onChange={(e) => updatePregunta(i, e.target.value)} />
+                    {preguntas.length > 1 && (
+                      <button onClick={() => removePregunta(i)}
+                        style={{ background: "none", border: "1px solid #3a3520", color: "#888270", borderRadius: 8, padding: "8px 10px", cursor: "pointer", fontSize: 14, fontFamily: "'DM Sans', sans-serif", flexShrink: 0, marginTop: 2 }}>
+                        ✕
+                      </button>
+                    )}
+                  </div>
+                ))}
+                <button onClick={addPregunta}
+                  style={{ background: "none", border: "1px dashed #3a3520", color: "#C9A84C", borderRadius: 8, padding: "10px 16px", cursor: "pointer", fontSize: 13, fontFamily: "'DM Sans', sans-serif", width: "100%", transition: "all 0.2s" }}>
+                  + Agregar otra pregunta
+                </button>
 
                 {/* Similar questions */}
                 {similar.length > 0 && (

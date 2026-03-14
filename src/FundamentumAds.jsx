@@ -134,6 +134,7 @@ export default function FundamentumAds() {
   const [loading, setLoading] = useState(true);
   const [similar, setSimilar] = useState([]);
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
   const [nombre, setNombre] = useState("");
   const [nicho, setNicho] = useState("");
   const [nichoCustom, setNichoCustom] = useState("");
@@ -175,7 +176,8 @@ export default function FundamentumAds() {
   }
 
   async function handleSubmit() {
-    if (!canSubmit) return;
+    if (!canSubmit || submitting) return;
+    setSubmitting(true);
     try {
       const newEntries = [];
       for (const p of preguntasValidas) {
@@ -188,10 +190,15 @@ export default function FundamentumAds() {
         newEntries.push(newEntry);
       }
       setEntries([...newEntries, ...entries]);
-    } catch {}
-    setNombre(""); setNicho(""); setNichoCustom(""); setTipoNegocio(""); setPreguntas([""]); setSimilar([]);
-    setSubmitted(true);
-    setTimeout(() => setSubmitted(false), 4000);
+      setNombre(""); setNicho(""); setNichoCustom(""); setTipoNegocio(""); setPreguntas([""]); setSimilar([]);
+      setSubmitted(true);
+      setTimeout(() => setSubmitted(false), 4000);
+    } catch (err) {
+      console.error("Error al enviar:", err);
+      alert("Hubo un error al enviar. Intenta de nuevo.");
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   async function handleVote(id) {
@@ -327,7 +334,7 @@ export default function FundamentumAds() {
                 {!canSubmit ? "Completa todos los campos para enviar" : "Todo listo"}
               </span>
             )}
-            <button className="btn-gold" disabled={!canSubmit} onClick={handleSubmit}>
+            <button className="btn-gold" disabled={!canSubmit || submitting} onClick={handleSubmit}>
               Enviar →
             </button>
           </div>
